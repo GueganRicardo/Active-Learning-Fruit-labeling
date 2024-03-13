@@ -1,0 +1,53 @@
+O que foi entregue: ProjectCode.zip + yolov4-custom-functions.zip + crop.zip + paper.pdf + instructions.txt
+
+Setup:
+1. Descomprimir os 3 zips
+2. Mover "yolov4-custom-functions" para "ProjectCode"
+3. Mover "crop" para "ProjectCode/yolov4-custom-functions/detections/"
+
+
+Como utilizar:
+
+1 - Ao iniciar uma experiência verificar:
+a) TER pasta "all_labelled" que permite iniciar com 20 imagens de cada classe
+b) NÃO TER um model com nome "image_classification_model.keras"  (apagar o da experiência anterior)
+c) NÃO TER pastas "expert_labelled" e "machine_labelled" (apagar as da experiência anterior)
+d) TER uma pasta crop dentro de "./yolov4-custom-functions/detections/" (pasta com imagens por usar para treino)
+
+2 - Realizar uma experiência:
+
+Inicializar o model com o pré-treino.
+aa) correr pre_train.py
+bb) python test_a_model.py image_classification_model.keras <n_test_examples_to_plot> (mostra a accuracy do modelo no final da execução)
+
+De seguida, ir alternando os seguintes passos:
+a) python active_learning.py (acrescenta imagens a all_labelled com base nas labelled pelo expert e nas que o model tem mais certeza, pasta com que o modelo é treinado)
+b) python test_a_model.py image_classification_model.keras <n_test_examples_to_plot> (mostra a accuracy do modelo no final da execução)
+
+NOTA: As pastas expert_labelled e machine_labelled servem apenas para efeitos de verificação de qualidade. Por exemplo, no decorrer da experiência podemos abrir cada pasta em machine_labelled e verificar a quantas imagens o model atribuiu uma label incorreta.
+
+
+No início do ficheiro active_learning.py é possível MUDAR OS PARÂMETROS das experiências:
+assuranceValue = 0.9 #how certain the model needs to be to accept
+nEpochsFirst = 10 #for the pretrain data
+nEpochsOthers = 3 #for each next iteration
+QueryStartegy = "lc" #options: lc sm eb 
+
+
+
+
+############################################################
+O teste destes programas necessita da diretoria "train". Devido à sua dimensão não a conseguimos submeter, mas é possível fazer o download: 
+
+Outros programas utilizados na pesquisa:
+
+- Modelo passivo (usado para verificar a performance do modelo passivo)
+1. Ter na diretoria a pasta train e test 
+2. Correr o ficheiro passive_learning.py
+3. Correr o test_a_model (python test_a_model.py <model_name> <n_examples_to_plot>)
+
+- Modelo passivo parcial (usado para saber a performance esperada com N imagens de cada classe)
+1. Ter na diretoria a pasta train e test 
+2. Mudar o valor da variável n_files (n_files = 20 -> treino com 20 imagens de cada classe)
+3. Correr o ficheiro part_passive_learning.py
+4. Correr o test_a_model (python test_a_model.py <model_name> <n_examples_to_plot>)
